@@ -62,6 +62,9 @@ def main():
         if game.winner() != None:
             run = False
 
+        if game.stalemate == True:
+            print("Stalemate")
+            run = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

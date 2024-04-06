@@ -11,6 +11,23 @@ class Board:
         self.selected_piece = None
         self.black_special = self.white_special = 0
         self.create_board()
+        self.black_possible_moves = 100
+        self.white_possible_moves = 100
+        self.stalemate = False
+
+
+    def calc_black_moves(self):
+        check = 0
+        for piecech in self.get_all_pieces(BLACK):
+            check += len(self.get_valid_moves(piecech))
+        return check
+
+    def calc_white_moves(self):
+        check = 0
+        for piecech in self.get_all_pieces(WHITE):
+            check += len(self.get_valid_moves(piecech))
+        return check
+
 
     def copy(self):
         new_board = Board()
@@ -19,6 +36,9 @@ class Board:
         new_board.white_left = self.white_left
         new_board.black_special = self.black_special
         new_board.white_special = self.white_special
+        new_board.calc_black_moves()
+        new_board.calc_white_moves()
+        new_board.stalemate = self.stalemate
         return new_board
 
     def __repr__(self):
@@ -34,13 +54,17 @@ class Board:
     def move(self, piece, row, col):
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
-
+        #print(self.calc_black_moves())
+       # print(self.calc_white_moves())
         if row == ROWS - 1 or row == 0:
             piece.make_special()
             if piece.color == WHITE:
                 self.white_special += 1
             else:
                 self.black_special += 1
+        if ((self.calc_black_moves() == 0 and piece.color == WHITE) or (self.calc_white_moves() == 0 and piece.color == BLACK)) and self.winner() is None:
+            self.stalemate = True
+
 
     def get_piece(self, row, col):
         return self.board[row][col]
@@ -88,8 +112,8 @@ class Board:
                 else:
                     self.white_left -= 1
 
-    def evaluate(self):
-        return self.black_left - self.white_left + (self.black_special - self.white_special) * 0.5
+    #def evaluate(self):
+       # return self.black_left - self.white_left + (self.black_special - self.white_special) * 0.5 - int(self.stalemate) * 10
 
     def winner(self):
         if self.black_left <= 0:
@@ -132,15 +156,21 @@ class Board:
     def get_coord_start(self, temp_board, color):
         for row in range(ROWS):
             for col in range(COLS):
-                if self.board[row][col] != 0 and temp_board.board[row][col] == 0 and self.board[row][col].color == color:
-                    return row, col
+                try:
+                    if self.board[row][col] != 0 and temp_board.board[row][col] == 0 and self.board[row][col].color == color:
+                        return row, col
+                except:
+                    pass
+
 
     def get_coord_final(self, temp_board):
         for row in range(ROWS):
             for col in range(COLS):
-                if self.board[row][col] == 0 and temp_board.board[row][col] != 0:
-                    return row, col
-
+                try:
+                    if self.board[row][col] == 0 and temp_board.board[row][col] != 0:
+                        return row, col
+                except:
+                    pass
 
     def _traverse_left(self, start, stop, step, color, left, skipped=[]):
         moves = {}
