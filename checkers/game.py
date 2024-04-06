@@ -79,6 +79,7 @@ class Game:
             skipped = self.valid_moves[(row, col)]
             if skipped:
                 self.board.remove(skipped)
+            self.board.check_stalemate(self.has_selected)
             self.change_turn()
             return True
         else:
@@ -90,6 +91,7 @@ class Game:
             skipped = self.valid_bot_moves[(row, col)]
             if skipped:
                 self.board.remove(skipped)
+            self.board.check_stalemate(self.bot_selected)
             self.change_turn()
             return True
         else:

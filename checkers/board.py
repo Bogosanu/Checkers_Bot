@@ -54,18 +54,17 @@ class Board:
     def move(self, piece, row, col):
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
-        #print(self.calc_black_moves())
-       # print(self.calc_white_moves())
         if row == ROWS - 1 or row == 0:
             piece.make_special()
             if piece.color == WHITE:
                 self.white_special += 1
             else:
                 self.black_special += 1
+
+
+    def check_stalemate(self, piece):
         if ((self.calc_black_moves() == 0 and piece.color == WHITE) or (self.calc_white_moves() == 0 and piece.color == BLACK)) and self.winner() is None:
             self.stalemate = True
-
-
     def get_piece(self, row, col):
         return self.board[row][col]
 
