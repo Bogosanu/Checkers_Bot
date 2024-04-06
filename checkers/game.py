@@ -11,9 +11,9 @@ class Game:
         if difficulty == "Easy":
             self.difficulty = 2
         if difficulty == "Medium":
-            self.difficulty = 4
+            self.difficulty = 3
         if difficulty == "Hard":
-            self.difficulty = 6
+            self.difficulty = 4
         self.stalemate = False
         self.player_col = player_col
 
