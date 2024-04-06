@@ -3,6 +3,7 @@ from checkers.constants import *
 from checkers.board import Board
 
 
+
 class Game:
 
     def __init__(self, win, difficulty, player_col):
@@ -22,7 +23,7 @@ class Game:
             self.stalemate = True
         self.board.draw(self.win)
         self.draw_valid_moves(self.valid_moves)
-        pygame.display.update()
+       # pygame.display.update()
 
     def turn_to_text(self):
         if self.turn == BLACK:
@@ -160,7 +161,12 @@ class Game:
         if self.turn == ai_col:
             _, move_coord, start_coord = self.minimax(self.board, self.difficulty, maximizing, float('-inf'),
                                                       float('inf'))
-            print("Bot went from " + str(start_coord) + " to " + str(move_coord))
+            if(self.player_col == 'Black'):
+                print("Bot went from " + str(start_coord) + " to " + str(move_coord))
+            else:
+                start_x, start_y = start_coord
+                move_x, move_y = move_coord
+                print("Bot went from (" + str(ROWS - start_x - 1) + ", " + str(COLS - start_y - 1) + ") to (" +  str(ROWS - move_x - 1) + ", " + str(COLS - move_y - 1) + ")")  # pentru imaginea rotita cand jucam cu alb
             if move_coord:
                 piece = self.board.get_piece(start_coord[0], start_coord[1])
                 self.bot_selected = piece

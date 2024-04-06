@@ -8,7 +8,7 @@ from checkers.menu import DropdownMenu
 import copy
 
 
-FPS = 20
+FPS = 5
 def selection_screen(win):
     pygame.font.init()
     font = pygame.font.SysFont(None, 30)
@@ -45,6 +45,7 @@ def get_mouse_pos(pos):
 def main():
     pygame.init()
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+
     pygame.display.set_caption('Checkers')
 
     selections = selection_screen(WIN)
@@ -52,12 +53,20 @@ def main():
 
     game = Game(WIN, difficulty, player_color)
 
-
+    if player_color == 'White':
+        flipped = True
+    else:
+        flipped = False
     run = True
     clock = pygame.time.Clock()
 
 
     while run:
+        if flipped:
+            rotated_surface = pygame.transform.rotate(WIN, 180)
+            WIN.blit(rotated_surface, (0, 0))
+            pygame.display.flip()
+
         clock.tick(FPS)
         if game.winner() != None:
             run = False
@@ -72,12 +81,18 @@ def main():
 
             if game.turn_to_text() == game.player_col:
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
+                    orx, ory = pygame.mouse.get_pos()
+                    if flipped:
+                        pos = (800 - orx, 800 - ory)
+                    else:
+                        pos = (orx, ory)
                     row, col = get_mouse_pos(pos)
                     game.select(row, col)
             else:
                 game.ai_move()
         game.update()
+        if not flipped:
+            pygame.display.update()
 
     pygame.quit()
 
