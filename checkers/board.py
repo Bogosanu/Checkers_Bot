@@ -111,9 +111,6 @@ class Board:
                 else:
                     self.white_left -= 1
 
-    #def evaluate(self):
-       # return self.black_left - self.white_left + (self.black_special - self.white_special) * 0.5 - int(self.stalemate) * 10
-
     def winner(self):
         if self.black_left <= 0:
             return WHITE

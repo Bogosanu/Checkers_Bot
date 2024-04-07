@@ -6,9 +6,10 @@ from checkers.board import Board
 from checkers.game import Game
 from checkers.menu import DropdownMenu
 import copy
+import time
 
 
-FPS = 5
+FPS = 60
 def selection_screen(win):
     pygame.font.init()
     font = pygame.font.SysFont(None, 30)
@@ -60,19 +61,22 @@ def main():
     run = True
     clock = pygame.time.Clock()
 
+    start_time = time.time()
 
     while run:
-        if flipped:
-            rotated_surface = pygame.transform.rotate(WIN, 180)
-            WIN.blit(rotated_surface, (0, 0))
-            pygame.display.flip()
 
         clock.tick(FPS)
         if game.winner() != None:
+            end_time = time.time()
+            print("Match duration: " + str(round(end_time - start_time, 2)) + " seconds")
+            pygame.time.wait(5000)
             run = False
 
         if game.stalemate == True:
             print("Stalemate")
+            end_time = time.time()
+            print("Match duration: " + str(round(end_time - start_time, 2)) + " seconds")
+            pygame.time.wait(5000)
             run = False
 
         for event in pygame.event.get():
@@ -83,14 +87,20 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     orx, ory = pygame.mouse.get_pos()
                     if flipped:
-                        pos = (800 - orx, 800 - ory)
+                        pos = (WIDTH - orx, HEIGHT - ory)
                     else:
                         pos = (orx, ory)
                     row, col = get_mouse_pos(pos)
                     game.select(row, col)
+                    # update screen
             else:
+                pygame.time.delay(500)
                 game.ai_move()
         game.update()
+        if flipped:
+            rotated_surface = pygame.transform.rotate(WIN, 180)
+            WIN.blit(rotated_surface, (0, 0))
+            pygame.display.flip()
         if not flipped:
             pygame.display.update()
 

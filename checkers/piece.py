@@ -41,8 +41,5 @@ class Piece:
         self.update_pos()
 
     def __repr__(self):
-        if self.color == (255, 255, 255):
-            return "WHITE"
-        else:
-            return "BLACK"
+        return "(" + str(self.row) + ", " + str(self.col) + ")"
 
