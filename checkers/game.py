@@ -88,7 +88,14 @@ class Game:
         if self.bot_selected:
             self.board.move(self.bot_selected, row, col)
             skipped = self.valid_bot_moves[(row, col)]
-            print("Bot removed pieces: " + str(skipped))
+            if self.player_col == 'Black':
+                print("Bot removed pieces: ")
+                for piece in skipped:
+                    print("(" + str(piece.row) + ", " + str(piece.col) + ")")
+            else:
+                print("Bot removed pieces: ")
+                for piece in skipped:
+                    print("(" + str(ROWS - piece.row - 1) + ", " + str(COLS - piece.col -  1) + ")")
             if skipped:
                 self.board.remove(skipped)
             self.board.check_stalemate(self.bot_selected)
